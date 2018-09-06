@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PacMan</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+</head>
+<body>
+	<div id="container">
+
+		
+		
+	
+
+	<script type="text/javascript">
+
+		var scoreBox= $('<div id="scoreBox"></div>');
+		var $score = 0; 
+		var $keyCount = 1	;
+		var pacmanImage= '<div class="ground"><img src="img/pacman.gif" class="pacman"></div>';
+		var cherry= '<div class="ground"><img src="img/cherry.png" class="cherry"></div>';
+
+
+		var pacMan = { x: 4, y:4 }
+
+		var map =[
+						[0,0,0,0,0,0,0,0,0,0],
+						[0,1,1,0,1,1,1,1,1,0],
+						[0,0,1,0,0,0,1,0,0,0],
+						[0,1,1,1,1,1,1,1,1,0],
+						[0,1,1,1,3,1,1,1,1,0],
+						[0,1,0,1,1,1,0,1,1,0],
+						[0,1,0,0,1,1,0,1,1,0],
+						[0,1,1,0,0,0,0,1,1,0],
+						[0,1,1,1,1,1,1,1,1,0],
+						[0,0,0,0,0,0,0,0,0,0]
+					];
+		function drawWorld(){
+			if($score===510){
+				
+		 map = [
+						[0,0,0,0,0,0,0,0,0,0],
+						[0,1,1,0,1,1,1,1,1,0],
+						[0,1,1,0,0,0,1,0,0,0],
+						[0,1,1,1,1,1,1,1,1,0],
+						[0,1,1,1,0,1,1,1,1,0],
+						[0,1,1,0,0,0,0,1,1,0],
+						[0,1,1,0,1,1,0,1,1,0],
+						[0,1,1,0,1,0,0,1,1,0],
+						[0,1,1,1,1,1,1,1,1,0],
+						[0,0,0,0,0,0,0,0,0,0]
+						];
+					for(y=0; y < map.length; y++){
+				for(x=0; x < map[y].length; x++)
+				  if (map[y][x]=== 3) {
+					$("#container").append(pacmanImage);
+					}
+				}
+					
+			}
+
+
+
+				if($keyCount % 30 === 0){
+				for(var i=1; i <99; i++){
+					  var cy = 1+ Math.floor(Math.random() * 9);
+					  var cx = 1 + Math.floor(Math.random() * 9)
+					  	
+					  	if(map[cy][cx]> 0){
+					  		if(map[cy][cx] < 3){
+					  			map[cy][cx]= 4;
+					  			i = i + 99;
+					  			console.log ((cy),(cx));
+					  		}
+					  	}
+				}
+			}
+
+			$("#container").html("");
+			for(y=0; y < map.length; y++){
+				for(x=0; x < map[y].length; x++){
+					if (map[y][x]=== 0) {
+					$("#container").append('<img src="img/blueBlock.png" class="wall">');
+					}
+					else if (map[y][x]=== 1) {
+					$("#container").append('<div class="ground"><div class="coin"></div></div>');
+					}
+					else if (map[y][x]=== 2) {
+					$("#container").append('<div class="ground"></div>');
+					}
+					else if (map[y][x]=== 3) {
+					$("#container").append(pacmanImage);
+					}
+					else if (map[y][x]=== 4) {
+					$("#container").append(cherry);
+					}
+
+				}
+			}
+			
+			$('#container').append(scoreBox);
+				$(scoreBox).html($score);
+			
+		
+
+		}
+		
+
+		drawWorld();
+
+
+		$(document).on("keydown", "html", function(e){
+			console.log("FIRES OFF!", e);
+			
+
+			if (e.keyCode === 37){ // Left
+				$keyCount+=1;
+				if(map[pacMan.y][pacMan.x-1]==1){
+						$score = $score + 10;
+						
+					}
+				if(map[pacMan.y][pacMan.x-1]==4){
+						$score = $score + 50;
+					}
+				if(map[pacMan.y][pacMan.x-1]>0){					
+				map[pacMan.y][pacMan.x] = 2;
+				pacMan.x = pacMan.x -1; 
+				map[pacMan.y][pacMan.x] = 3;
+								drawWorld();
+				}
+
+				
+			}
+
+
+
+			if (e.keyCode === 38){ // up
+
+				$keyCount+=1;
+				if(map[pacMan.y-1][pacMan.x]==1){
+						$score = $score + 10;
+					}
+				if(map[pacMan.y-1][pacMan.x]==4){
+						$score = $score + 50;
+					}
+				if(map[pacMan.y-1][pacMan.x]>0){
+				map[pacMan.y][pacMan.x] = 2;
+				pacMan.y = pacMan.y -1; 
+				map[pacMan.y][pacMan.x] = 3;
+				drawWorld();
+				}	
+				if (e.keyCode === 38){ 
+				$('.pacman').css({transform:"rotateZ(90deg)"})
+				}
+				
+			}
+			if (e.keyCode === 39){ // right
+				$keyCount+=1
+				if(map[pacMan.y][pacMan.x+1]==1){
+						$score = $score + 10;
+					}
+				if(map[pacMan.y][pacMan.x+1]==4){
+						$score = $score + 50;
+					}
+				if(map[pacMan.y][pacMan.x+1]>0){
+				map[pacMan.y][pacMan.x] = 2;
+				pacMan.x = pacMan.x +1; 
+				map[pacMan.y][pacMan.x] = 3;
+
+				drawWorld();
+				}
+				if (e.keyCode === 39){ 
+				$('.pacman').css({transform:"rotateZ(180deg)"})
+				}
+				
+			}
+			if (e.keyCode === 40){ // down
+				$keyCount+=1;
+				if(map[pacMan.y+1][pacMan.x]==1){
+						$score = $score + 10;
+					}
+				if(map[pacMan.y+1][pacMan.x]==4){
+						$score = $score + 50;
+					}
+				if(map[pacMan.y+1][pacMan.x]>0){
+				map[pacMan.y][pacMan.x] = 2;
+				pacMan.y = pacMan.y +1; 
+				map[pacMan.y][pacMan.x] = 3;
+				
+				drawWorld();
+				}
+			if (e.keyCode === 40){ 
+				$('.pacman').css({transform:"rotateZ(270deg)"})
+				}
+				
+			}
+			
+		})
+		
+
+	</script>
+	</div>
+
+</body>
+</html>
